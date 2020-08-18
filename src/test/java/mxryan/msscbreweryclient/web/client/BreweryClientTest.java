@@ -28,7 +28,16 @@ class BreweryClientTest {
         BeerDto beerDto = BeerDto.builder().beerName("La Farquada").build();
         URI uri = client.saveNewBeer(beerDto);
         assertNotNull(uri);
-        System.out.println(uri.toString());
+    }
 
+    @Test
+    void updateBeerTest() {
+        BeerDto beerDto = BeerDto.builder().beerName("Tripalistaticolisimo").build();
+        client.updateBeer(UUID.randomUUID(), beerDto);
+    }
+
+    @Test
+    void deleteBeerTest() {
+        client.deleteBeer(UUID.randomUUID());
     }
 }

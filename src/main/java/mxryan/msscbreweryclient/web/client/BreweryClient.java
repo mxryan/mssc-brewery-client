@@ -10,14 +10,9 @@ import java.net.URI;
 import java.util.UUID;
 
 @Component
-@ConfigurationProperties(value="sfg.brewery", ignoreUnknownFields = false)
+@ConfigurationProperties(value = "breweryclient", ignoreUnknownFields = false)
 public class BreweryClient {
     public final String BEER_PATH_V1 = "/api/v1/beer/";
-
-    public void setApihost(String apihost) {
-        this.apihost = apihost;
-    }
-
     private String apihost;
     private final RestTemplate restTemplate;
 
@@ -25,13 +20,28 @@ public class BreweryClient {
         this.restTemplate = restTemplateBuilder.build();
     }
 
+    public void setApihost(String apihost) {
+        this.apihost = apihost;
+    }
+
     public BeerDto getBeerById(UUID uuid) {
-        return restTemplate.getForObject(apihost + BEER_PATH_V1 + uuid.toString(), BeerDto.class);
+        String url = apihost + BEER_PATH_V1 + uuid.toString();
+        return restTemplate.getForObject(url, BeerDto.class);
+    }
+
+    public void updateBeer(UUID uuid, BeerDto beerDto) {
+        String url = apihost + BEER_PATH_V1 + uuid.toString();
+        restTemplate.put(url, beerDto);
     }
 
     public URI saveNewBeer(BeerDto beerDto) {
-        System.out.println("aayyy apihost: " + apihost);
-        return restTemplate.postForLocation(apihost + BEER_PATH_V1, beerDto);
+        String url = apihost + BEER_PATH_V1;
+        return restTemplate.postForLocation(url, beerDto);
     }
 
- }
+
+    public void deleteBeer(UUID uuid) {
+        restTemplate.delete(apihost + BEER_PATH_V1 + uuid);
+    }
+
+}
